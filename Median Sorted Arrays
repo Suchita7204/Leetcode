@@ -1,0 +1,54 @@
+class Solution {
+public:
+    double findMedianSortedArrays(vector<int>& nums1, vector<int>& nums2) {
+        // Ensure num1 is the smaller array. If not, swap num1 and num2 to optimize binary search
+        if(nums1.size() > nums2.size()) {
+            return findMedianSortedArrays(nums2, nums1);
+        }
+
+        int sizeOfNum1 = nums1.size();  // Size of num1
+        int sizeOfNum2 = nums2.size();  // Size of num2
+        int leftPartitionOfTotalLength = (sizeOfNum1 + sizeOfNum2 + 1) / 2;
+
+        int low = 0, high = sizeOfNum1; // Binary search boundaries on num1
+
+        // Sort the arrays first for binary search logic to work correctly
+        sort(nums1.begin(), nums1.end());
+        sort(nums2.begin(), nums2.end());
+
+        // Binary search on the smaller array (num1)
+        while(low <= high) {
+            int mid1 = (low + high) / 2;    // Partition index in num1
+            int mid2 = leftPartitionOfTotalLength - mid1; // Partition index in num2, derived from total length of merged array
+
+            // Handling edge cases:
+            int left1 = (mid1 == 0) ? INT_MIN : nums1[mid1 - 1];
+            int right1 = (mid1 == sizeOfNum1) ? INT_MAX : nums1[mid1];
+
+            int left2 = (mid2 == 0) ? INT_MIN : nums2[mid2 - 1];
+            int right2 = (mid2 == sizeOfNum2) ? INT_MAX : nums2[mid2];
+
+            // Check if partition is valid
+            if(left1 <= right2 && left2 <= right1) {
+                // If the merged array has Even number of elements
+                if((sizeOfNum1 + sizeOfNum2) % 2 == 0) {
+                    // Median is the average of the max of left side and min of right side
+                    return (max(left1, left2) + min(right1, right2)) / 2.0;
+                }
+                else {
+                    // If the merged array has odd number of elements, take the max of left side
+                    return max(left1, left2);
+                }
+            }
+            // If partition in num1 is big, adjust the binary search range
+            else if(left1 > right2) {
+                high = mid1 - 1;
+            }
+            // If partition in num1 is small, adjust the binary search range
+            else {
+                low = mid1 + 1;
+            }
+        }
+        return 0;
+    }
+};
