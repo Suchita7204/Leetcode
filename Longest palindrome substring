@@ -1,0 +1,32 @@
+class Solution {
+public:
+    string expandAroundIndex(string s, int left, int right){
+        vector<string> palindromes;
+        while(left>=0 && right<s.length() && s[left]==s[right]){
+            palindromes.push_back(s.substr(left, right-left+1));
+            left--, right++;
+        }
+        string maxi = "";
+        for(auto str: palindromes){
+            maxi = maxi.length()>str.length() ? maxi : str;
+        }
+        return maxi;
+    }
+
+    string longestPalindrome(string s) {
+        vector<string> largePalindromes;
+
+        for(int center=0; center<s.size(); center++){
+            string evenPalindromes = expandAroundIndex(s, center, center+1);
+            largePalindromes.push_back(evenPalindromes);
+            string oddPalindromes = expandAroundIndex(s, center, center);
+            largePalindromes.push_back(oddPalindromes);
+        }
+
+        string maxi = "";
+        for(auto str: largePalindromes){
+            maxi = maxi.length()>str.length() ? maxi : str;
+        }
+        return maxi;
+    }
+};
