@@ -1,0 +1,55 @@
+class MyHashMap {
+public:
+    int bucket;
+    vector<list<pair<int,int>>>mp;
+    MyHashMap() {
+     bucket=10007;
+     mp.resize(bucket);
+    }
+    int hash(int key){
+        return key % bucket;
+    }
+    list<pair<int,int>> :: iterator  search(int key){
+        int i=hash(key);
+        list<pair<int,int>>:: iterator  itr=mp[i].begin(); 
+        while (itr !=mp[i].end()){
+            if(itr->first==key){
+                return itr;
+            }
+            itr++;
+        }
+        return itr;
+    }
+    
+    void put(int key, int value) {
+      int i=hash(key);
+      remove(key);
+      mp[i].push_back({key,value});  
+    }
+    
+    int get(int key) {
+      int i=hash(key);
+      list<pair<int,int>>::iterator itr=search(key);
+      if(itr==mp[i].end()){
+        return -1;
+      }else{
+        return itr->second;
+      }
+    }
+    
+    void remove(int key) {
+     int i=hash(key);
+     list<pair<int,int>>:: iterator itr=search(key);
+     if(itr!=mp[i].end()){
+        mp[i].erase(itr);
+     }   
+    }
+};
+
+/**
+ * Your MyHashMap object will be instantiated and called as such:
+ * MyHashMap* obj = new MyHashMap();
+ * obj->put(key,value);
+ * int param_2 = obj->get(key);
+ * obj->remove(key);
+ */
