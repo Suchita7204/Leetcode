@@ -1,0 +1,125 @@
+#include <stdio.h>
+#include <stdlib.h>
+
+typedef struct Lklist {
+    int info;
+    struct Lklist *next;
+} node;
+
+void insertatbeginning(node **h, int value);
+void insertatend(node **h, int value);
+void traverse(node *h);
+int search(node *h, int value);
+
+int main() {
+    node *h = NULL;
+    int choice, value;
+
+    while (1) {
+        printf("\n1 - Insert at beginning\n");
+        printf("2 - Insert at end\n");
+        printf("3 - Traverse \n");
+        printf("4 - Search \n");
+        printf("5 - Exit\n");
+        printf("Enter your choice: ");
+        scanf("%d", &choice);
+
+        switch (choice) {
+            case 1:
+                printf("Enter the value: ");
+                scanf("%d", &value);
+                insertatbeginning(&h, value);
+                break;
+
+            case 2:
+                printf("Enter the value: ");
+                scanf("%d", &value);
+                insertatend(&h, value);
+                break;
+
+            case 3:
+                traverse(h);
+                break;
+
+            case 4:
+                printf("Enter the value to search: ");
+                scanf("%d", &value);
+                if (search(h, value)) {
+                    printf("Element found!\n");
+                } else {
+                    printf("Element not found!\n");
+                }
+                break;
+
+            case 5:
+                printf("Exiting...\n");
+                exit(0);
+
+            default:
+                printf(" Please enter a valid option.\n");
+        }
+    }
+
+    return 0;
+}
+
+// insert  beginning
+void insertatbeginning(node **h, int value) {
+    node *nnode = (node *)malloc(sizeof(node));
+    if (nnode == NULL) {
+        printf("allocation failed!\n");
+        return;
+    }
+    nnode->info = value;
+    nnode->next = *h;
+    *h = nnode;
+}
+
+//  insert  end
+void insertatend(node **h, int value) {
+    node *nnode = (node *)malloc(sizeof(node));
+    if (nnode == NULL) {
+        printf("Memory allocation failed!\n");
+        return;
+    }
+    nnode->info = value;
+    nnode->next = NULL;
+
+    if (*h == NULL) {
+        *h= nnode;
+        return;
+    }
+
+    node *temp = *h;
+    while (temp->next != NULL) {
+        temp = temp->next;
+    }
+    temp->next = nnode;
+}
+
+// traverse 
+void traverse(node *h) {
+    if (h == NULL) {
+        printf("list is empty.\n");
+        return;
+    }
+    printf("Linked list: ");
+    node *temp = h;
+    while (temp != NULL) {
+        printf("%d -> ", temp->info);
+        temp = temp->next;
+    }
+    printf("NULL\n");
+}
+
+//  search 
+int search(node *h, int value) {
+    node *temp = h;
+    while (temp != NULL) {
+        if (temp->info == value) {
+            return 1;  // Found
+        }
+        temp = temp->next;
+    }
+    return 0;  // Not found
+}
