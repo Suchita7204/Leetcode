@@ -1,0 +1,17 @@
+class Solution {
+public:
+    vector<vector<int>> generate(int j) {
+        if (j == 0) return {};
+        if (j == 1) return {{1}};
+        
+        vector<vector<int>> prevRows = generate(j- 1);
+        vector<int> newRow(j, 1);
+        
+        for (int i = 1; i < j - 1; i++) {
+            newRow[i] = prevRows.back()[i - 1] + prevRows.back()[i];
+        }
+        
+        prevRows.push_back(newRow);
+        return prevRows;
+    }
+};
